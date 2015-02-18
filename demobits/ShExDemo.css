@@ -150,3 +150,7 @@ h2 { margin: 0; border: none; }
 }
 
 .highlightTerms { background-color: #de9; } /* couldn't decide bewteen hover and click for data selection UI. */
+
+#dropbox.hover {
+ background: #404040;
+}

@@ -284,7 +284,7 @@
           <div class="message progress">Preparing to parse data.</div>
           <div style="clear:both;"></div>
         </div>
-        <textarea class="textInput" spellcheck="false" cols="70" rows="20"></textarea>
+        <textarea id="dropbox" class="textInput" spellcheck="false" cols="70" rows="20" placeholder="Drag-and-drop or copy/paste a data file here"></textarea>
         <div class="editparent"><pre class="textInput" contenteditable="true" spellcheck="false" style="display:none; overflow:scroll !important; "></pre></div>
         <input class="save" value=""></input>
       </div>
@@ -352,6 +352,44 @@
                     $("#apology").text("Error running javascript libraries: " + e);
                 }
             });
+
+            var fileDragHandler = function(e) {
+              e.stopPropagation();
+              e.preventDefault();
+              e.target.className = (e.type == "dragover" ? "hover" : "");
+            }
+
+            var initDragAndDrop = function(){
+              var dropbox = document.getElementById('dropbox');
+
+              if (typeof window.FileReader === 'undefined') {
+                alert("File API not supported in this browser, drag-and-drop not available");
+              } else { 
+
+                //setup hover feedback effects with event listeners
+                dropbox.ondragover = fileDragHandler;
+                dropbox.ondragend = fileDragHandler;
+                dropbox.ondragleave = fileDragHandler;
+
+                // read a dropped file and write to text area
+                dropbox.ondrop = function(e) {
+                  this.className = '';
+                  e.preventDefault();
+
+                  var file = e.dataTransfer.files[0],
+                      reader = new FileReader();
+                  reader.onload = function(event) {
+                    //
+                    $('#dropbox').val(event.target.result).trigger("click");
+                  };
+                  reader.readAsText(file);
+
+                  return false;
+                };
+              }
+            }
+
+            initDragAndDrop();
         </script>
 <!-- 
         <script src="demobits/jquery.min.js" type= "text/javascript"></script>
